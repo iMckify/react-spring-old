@@ -1,1 +1,6 @@
-rootProject.name = 'application'
+rootProject.name = 'react-spring'
+
+include 'backend'
+include 'frontend'
+
+project(':backend').name = 'backend'
