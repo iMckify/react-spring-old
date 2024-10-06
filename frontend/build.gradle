@@ -10,3 +10,7 @@ node {
 tasks.register('npmBuild', NpmTask) {
     args = [ 'run', 'build' ]
 }
+
+apply plugin: 'base'
+npmBuild.dependsOn npm_install
+assemble.dependsOn npmBuild

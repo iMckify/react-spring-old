@@ -27,3 +27,12 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+tasks.register('addFrontendToBackend', Copy) {
+    dependsOn(':frontend:assemble')
+    from "$rootDir/frontend/build"
+    into "$buildDir/resources/main/static/."
+}
+
+processResources.dependsOn addFrontendToBackend
+
