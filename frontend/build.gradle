@@ -1,0 +1,12 @@
+plugins {
+    id 'com.github.node-gradle.node' version '7.1.0'
+}
+
+node {
+    version = '22.9.0'
+    download = true
+}
+
+tasks.register('npmBuild', NpmTask) {
+    args = [ 'run', 'build' ]
+}
