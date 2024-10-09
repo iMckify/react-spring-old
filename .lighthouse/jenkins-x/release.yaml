@@ -10,12 +10,11 @@ spec:
       resources: {}
       taskSpec:
         metadata: {}
+        spec: null
         stepTemplate:
           image: uses:jenkins-x/jx3-pipeline-catalog/tasks/gradle/release.yaml@versionStream
           name: ""
-          resources:
-            # override limits for all containers here
-            limits: {}
+          resources: {}
           workingDir: /workspace/source
         steps:
         - image: uses:jenkins-x/jx3-pipeline-catalog/tasks/git-clone/git-clone.yaml@versionStream
@@ -25,12 +24,15 @@ spec:
           resources: {}
         - name: jx-variables
           resources:
-            # override requests for the pod here
             requests:
               cpu: 400m
               memory: 512Mi
-        - name: build-gradle-build
+        - image: gradle:8.10.2-jdk21
+          name: build-gradle-build
           resources: {}
+          script: |
+            #!/bin/sh
+            gradle clean build
         - name: check-registry
           resources: {}
         - name: build-container-build
