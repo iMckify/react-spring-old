@@ -1,4 +1,4 @@
-FROM cgr.dev/chainguard/jre:latest
+FROM cgr.dev/chainguard/jre:latest-dev
 ENV PORT 8080
 EXPOSE 8080
 WORKDIR /opt
