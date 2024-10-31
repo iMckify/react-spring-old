@@ -30,8 +30,7 @@ spec:
           resources: {}
           script: |
             #!/bin/sh
-            gradle clean build :backend:bootJar
-            ls -R /workspace/source
+            gradle clean build
         - name: check-registry
           resources: {}
         - image: gcr.io/kaniko-project/executor:v1.23.2-debug
