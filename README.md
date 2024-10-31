@@ -1,0 +1,1 @@
+docker run --rm --entrypoint java -v /home/rokas/BakalaurasProjects/jenkins-x/react-spring/backend/build/libs/backend-0.0.1-SNAPSHOT.jar:/opt/app.jar -p 8080:8080 cgr.dev/chainguard/jre@sha256:08de7ab60f36f618aeca33d9f10f5b8a59dee5bf57f1ec7a1f0d497a2e681410 -jar /opt/app.jar
