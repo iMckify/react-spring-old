@@ -31,8 +31,6 @@ spec:
           script: |
             #!/bin/sh
             gradle clean build :backend:bootJar
-            echo "Gradle Listing contents of /workspace/source/backend/build/libs:"
-            ls -R /workspace/source/backend/build/libs
         - name: check-registry
           resources: {}
         - image: gcr.io/kaniko-project/executor:v1.23.2-debug
@@ -42,8 +40,6 @@ spec:
             #!/busybox/sh
             source .jx/variables.sh
             cp /tekton/creds/.docker/config.json /kaniko/.docker/config.json
-            echo "Container Listing contents of /workspace/source/backend/build/libs:"
-            ls -R /workspace/source/backend/build/libs
             /kaniko/executor $KANIKO_FLAGS --context=/workspace/source --dockerfile=${DOCKERFILE_PATH:-Dockerfile} --destination=$PUSH_CONTAINER_REGISTRY/$DOCKER_REGISTRY_ORG/$APP_NAME:$VERSION
         - name: promote-jx-preview
           resources: {}
