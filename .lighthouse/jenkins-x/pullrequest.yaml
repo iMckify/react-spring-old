@@ -31,10 +31,10 @@ spec:
           script: |
             #!/bin/sh
             gradle clean build :backend:bootJar
-            ls /workspace/source
+            ls -R /workspace/source
         - name: check-registry
           resources: {}
-        - image: gcr.io/kaniko-project/executor:v1.9.1-debug
+        - image: gcr.io/kaniko-project/executor:v1.23.2-debug
           name: build-container-build
           resources: {}
           script: |
