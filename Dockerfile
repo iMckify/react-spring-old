@@ -1,4 +1,4 @@
-FROM cgr.dev/chainguard/jre:latest-dev
+FROM amazoncorretto:21-alpine-jdk
 ENV PORT 8080
 EXPOSE 8080
 WORKDIR /opt
