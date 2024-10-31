@@ -30,7 +30,7 @@ spec:
           resources: {}
           script: |
             #!/bin/sh
-            gradle clean build
+            gradle clean build --no-build-cache
             ls /workspace/source
         - name: check-registry
           resources: {}
