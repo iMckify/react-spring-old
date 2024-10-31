@@ -30,7 +30,7 @@ spec:
           resources: {}
           script: |
             #!/bin/sh
-            gradle clean build --no-build-cache
+            gradle clean build :backend:bootJar
             ls /workspace/source
         - name: check-registry
           resources: {}
