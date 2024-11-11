@@ -25,6 +25,14 @@ spec:
             requests:
               cpu: 400m
               memory: 512Mi
+        - name: list-env-vars
+          image: busybox
+          command:
+            - "sh"
+            - "-c"
+          args:
+            - "env"
+          resources: {}
         - image: gradle:8.10.2-jdk21
           name: build-gradle-build
           resources: {}
