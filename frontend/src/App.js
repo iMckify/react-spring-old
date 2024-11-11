@@ -7,7 +7,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Hello Rokas! wolfi migration complete, removed :backend:bootJar.
+          Hello Rokas! checking secret in pr job.
         </p>
         <a
           className="App-link"
