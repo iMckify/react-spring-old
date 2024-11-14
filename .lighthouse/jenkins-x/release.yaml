@@ -45,8 +45,8 @@ spec:
             /kaniko/executor $KANIKO_FLAGS --context=/workspace/source --dockerfile=${DOCKERFILE_PATH:-Dockerfile} --destination=$PUSH_CONTAINER_REGISTRY/$DOCKER_REGISTRY_ORG/$APP_NAME:$VERSION
         - name: promote-changelog
           resources: {}
-        - image: ghcr.io/jenkins-x/jx-boot:3.11.1
-          name: promote-helm-release
+        - image: alpine/helm:3.8.2
+          name: promote-helm-release-custom
           resources: {}
           script: |
             #!/usr/bin/env sh
