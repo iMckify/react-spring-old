@@ -52,7 +52,7 @@ spec:
             #!/usr/bin/env sh
             source .jx/variables.sh
             # Add OCI flag here to use OCI registry for helm release
-            jx gitops helm release --oci --no-oci-login --repo-url oci://$DOCKER_REGISTRY --version $VERSION
+            helm push ./charts/react-spring/react-spring-$VERSION.tgz oci://docker-registry-jx.$DOMAIN/charts --insecure-skip-tls-verify
         - name: promote-jx-promote
           resources: {}
   podTemplate: {}
