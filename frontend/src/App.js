@@ -7,7 +7,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Hello Rokas! trigger release
+          Hello Rokas! trigger release 2
         </p>
         <a
           className="App-link"
