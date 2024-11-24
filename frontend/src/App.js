@@ -7,7 +7,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Hello Rokas! fixing bootjob 74 helm chart 0.0.32 not found
+          Hello Rokas! trigger release
         </p>
         <a
           className="App-link"
