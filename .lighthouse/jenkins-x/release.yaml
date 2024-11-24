@@ -45,8 +45,16 @@ spec:
             /kaniko/executor $KANIKO_FLAGS --context=/workspace/source --dockerfile=${DOCKERFILE_PATH:-Dockerfile} --destination=$PUSH_CONTAINER_REGISTRY/$DOCKER_REGISTRY_ORG/$APP_NAME:$VERSION
         - name: promote-changelog
           resources: {}
-        - name: promote-helm-release
+        - image: alpine/helm:3.16.1
+          name: promote-helm-release-custom
           resources: {}
+          script: |
+            #!/usr/bin/env sh
+            source .jx/variables.sh
+            # Add OCI flag here to use OCI registry for helm release
+            ls /
+            ls -la ./charts
+            helm push ./charts/$APP_NAME/$APP_NAME-$VERSION.tgz oci://docker-registry-jx.$DOMAIN/charts --insecure-skip-tls-verify
         - name: promote-jx-promote
           resources: {}
   podTemplate: {}
