@@ -40,6 +40,10 @@ spec:
           script: |
             #!/bin/sh
             gradle clean build || echo "Gradle build failed but continuing the pipeline" && exit 0
+        - name: publish-test-artifacts
+          image: jenkins/junit-plugin:latest
+          commands:
+            - junit ./backend/build/test-results/**/*.xml
         - name: check-registry
           resources: {}
         - image: gcr.io/kaniko-project/executor:v1.23.2-debug
