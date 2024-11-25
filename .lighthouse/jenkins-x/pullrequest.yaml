@@ -39,7 +39,7 @@ spec:
           continueAfterSkip: true
           script: |
             #!/bin/sh
-            gradle clean build
+            gradle clean build || exit 1
         - name: check-registry
           resources: {}
         - image: gcr.io/kaniko-project/executor:v1.23.2-debug
