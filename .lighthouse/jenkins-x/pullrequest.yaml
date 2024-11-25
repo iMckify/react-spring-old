@@ -36,6 +36,7 @@ spec:
         - image: gradle:8.10.2-jdk21
           name: build-gradle-build
           resources: {}
+          continueAfterSkip: true
           script: |
             #!/bin/sh
             gradle clean build
