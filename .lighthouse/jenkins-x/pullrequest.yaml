@@ -49,15 +49,15 @@ spec:
             ls /workspace/source
             mkdir -p /workspace/tap-results
             echo "Converting JUnit results to TAP..."
-            tap-junit /workspace/source/backend/build/test-results/test/ > /workspace/tap-results/results.html
+            tap-junit /workspace/source/backend/build/test-results/test/ > /workspace/tap-results/results.tap
         - name: log-tap-results
           image: busybox
           script: |
             #!/bin/sh
             echo "List /workspace/tap-results"
             ls -la /workspace/tap-results
-            echo "cat /workspace/tap-results/results.html"
-            cat /workspace/tap-results/results.html
+            echo "cat /workspace/tap-results/results.tap"
+            cat /workspace/tap-results/results.tap
         - image: ghcr.io/jenkins-x/jx-boot:3.11.1
           name: process-tap-results
           resources: {}
