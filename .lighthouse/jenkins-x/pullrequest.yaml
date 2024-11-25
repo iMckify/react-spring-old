@@ -40,10 +40,6 @@ spec:
           script: |
             #!/bin/sh
             gradle clean build
-        - name: Publish JUnit Test Report
-          image: jenkins/junit-plugin:latest
-          commands:
-            - junit ./backend/build/test-results/**/*.xml
         - name: check-registry
           resources: {}
         - image: gcr.io/kaniko-project/executor:v1.23.2-debug
