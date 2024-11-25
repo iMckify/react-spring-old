@@ -54,6 +54,7 @@ spec:
           image: busybox
           script: |
             #!/bin/sh
+            echo "List /workspace/tap-results"
             ls -la /workspace/tap-results
             jx tap run --dir /workspace/tap-results --html
         - name: upload-html-report
