@@ -1,25 +1,18 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  creationTimestamp: null
   name: pullrequest
 spec:
   pipelineSpec:
     tasks:
     - name: from-build-pack
-      resources: {}
       taskSpec:
-        metadata: {}
-        spec: null
         stepTemplate:
           image: uses:jenkins-x/jx3-pipeline-catalog/tasks/gradle/pullrequest.yaml@versionStream
-          name: ""
-          resources: {}
           workingDir: /workspace/source
         steps:
         - image: uses:jenkins-x/jx3-pipeline-catalog/tasks/git-clone/git-clone-pr.yaml@versionStream
-          name: ""
-          resources: {}
+          name: git-clone-pr
         - name: jx-variables
           resources:
             requests:
@@ -32,27 +25,25 @@ spec:
             - "-c"
           args:
             - "env"
-          resources: {}
         - image: gradle:8.10.2-jdk21
           name: build-gradle-build
-          resources: {}
           script: |
             #!/bin/sh
-            gradle clean build
-            echo 'copying test artifacts'
-            cp -r ./backend/build/reports /workspace/source/artifacts/
+            echo "Running Gradle build"
+            gradle clean build || exit 1
+            echo "Copying test artifacts"
+            mkdir -p /workspace/source/artifacts/reports
+            cp -r ./backend/build/reports/* /workspace/source/artifacts/reports/
+            echo "Test artifacts copied to /workspace/source/artifacts/reports/"
         - name: check-registry
-          resources: {}
         - image: gcr.io/kaniko-project/executor:v1.23.2-debug
           name: build-container-build
-          resources: {}
           script: |
             #!/busybox/sh
             source .jx/variables.sh
             cp /tekton/creds/.docker/config.json /kaniko/.docker/config.json
             /kaniko/executor $KANIKO_FLAGS --context=/workspace/source --dockerfile=${DOCKERFILE_PATH:-Dockerfile} --destination=$PUSH_CONTAINER_REGISTRY/$DOCKER_REGISTRY_ORG/$APP_NAME:$VERSION
         - name: promote-jx-preview
-          resources: {}
   podTemplate: {}
   serviceAccountName: tekton-bot
   timeout: 12h0m0s
