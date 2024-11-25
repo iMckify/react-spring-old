@@ -64,7 +64,7 @@ spec:
           script: |
             #!/usr/bin/env sh
             source .jx/variables.sh
-            jx tap run --dir /workspace/tap-results --html
+            jx tap run --dir /workspace/tap-results
         - name: upload-html-report
           image: busybox
           script: |
