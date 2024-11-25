@@ -40,6 +40,16 @@ spec:
           script: |
             #!/bin/sh
             gradle clean build || exit 1
+        - name: install-and-run-tap-junit
+          image: node:20
+          script: |
+            #!/bin/sh
+            npm install -g tap-junit
+            echo "List /workspace/source"
+            ls /workspace/source
+            mkdir -p /workspace/tap-results
+            echo "Converting JUnit results to TAP..."
+            tap-junit /workspace/source/backend/build/test-results/test/ > /workspace/tap-results/results.tap
         - name: check-registry
           resources: {}
         - image: gcr.io/kaniko-project/executor:v1.23.2-debug
