@@ -39,7 +39,7 @@ spec:
           continueAfterSkip: true
           script: |
             #!/bin/sh
-            gradle clean build || echo "Gradle build failed but continuing the pipeline" && exit 0
+            gradle clean build || echo "Gradle build failed but continuing the pipeline" && exit 1
             echo "Copying test artifacts"
             mkdir -p /workspace/source/artifacts/reports
             cp -r ./backend/build/reports/* /workspace/source/artifacts/reports/
