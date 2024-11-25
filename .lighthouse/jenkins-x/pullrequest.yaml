@@ -39,7 +39,8 @@ spec:
           script: |
             #!/bin/sh
             gradle clean build
-            cp -r backend/reports /workspace/source/artifacts/
+            echo 'copying test artifacts'
+            cp -r ./backend/build/reports /workspace/source/artifacts/
         - name: check-registry
           resources: {}
         - image: gcr.io/kaniko-project/executor:v1.23.2-debug
