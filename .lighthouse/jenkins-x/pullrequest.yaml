@@ -51,6 +51,7 @@ spec:
             echo "Converting JUnit results to TAP..."
             tap-junit /workspace/source/backend/build/test-results/test/ > /workspace/tap-results/results.tap
         - name: process-tap-results
+          image: busybox
           script: |
             #!/bin/sh
             jx tap run --dir /workspace/tap-results --html
