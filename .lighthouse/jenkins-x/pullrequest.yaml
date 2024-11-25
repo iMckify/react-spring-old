@@ -50,6 +50,12 @@ spec:
             mkdir -p /workspace/tap-results
             echo "Converting JUnit results to TAP..."
             tap-junit /workspace/source/backend/build/test-results/test/ > /workspace/tap-results/results.tap
+        - name: process-tap-results
+          image: ghcr.io/jenkins-x-plugins/jx-tap:latest
+          script: |
+            #!/bin/sh
+            echo "Processing TAP results into HTML..."
+            jx tap run --dir /workspace/tap-results --html
         - name: check-registry
           resources: {}
         - image: gcr.io/kaniko-project/executor:v1.23.2-debug
