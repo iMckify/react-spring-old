@@ -43,6 +43,7 @@ spec:
         - name: collect-test-results
           image: busybox
           script: |
+            mkdir /workspace/test-results
             cp -r backend/build/test-results /workspace/test-results
           artifacts:
             paths:
