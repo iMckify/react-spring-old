@@ -49,7 +49,7 @@ spec:
             ls /workspace/source
             mkdir -p /workspace/tap-results
             echo "Converting JUnit results to TAP..."
-            tap-junit /workspace/source/backend/build/test-results/test/ > /workspace/tap-results/results.tap
+            tap-junit /workspace/source/backend/build/test-results/test/TEST-com.imckify.application.ApplicationTests.xml > /workspace/tap-results/results.tap
         - name: log-tap-results
           image: busybox
           script: |
