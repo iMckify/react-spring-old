@@ -39,6 +39,7 @@ spec:
           script: |
             #!/bin/sh
             gradle clean build
+            cp -r backend/reports /workspace/source/artifacts/
         - name: check-registry
           resources: {}
         - image: gcr.io/kaniko-project/executor:v1.23.2-debug
