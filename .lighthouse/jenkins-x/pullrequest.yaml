@@ -64,13 +64,8 @@ spec:
           script: |
             #!/usr/bin/env sh
             source .jx/variables.sh
-            jx tap run --verbose --dir /workspace/tap-results
-        - name: upload-html-report
-          image: busybox
-          script: |
-            #!/bin/sh
-            echo "Uploading HTML report..."
-            mv /workspace/tap-results/ /workspace/source/artifacts/
+            echo "executing jx tap run"
+            jx tap run --verbose --dir /workspace/tap-results/
         - name: check-registry
           resources: {}
         - image: gcr.io/kaniko-project/executor:v1.23.2-debug
