@@ -6,98 +6,71 @@ metadata:
 spec:
   pipelineSpec:
     tasks:
-    - name: from-build-pack
-      resources: {}
-      taskSpec:
-        metadata: {}
-        spec: null
-        stepTemplate:
-          image: uses:jenkins-x/jx3-pipeline-catalog/tasks/gradle/pullrequest.yaml@versionStream
-          name: ""
-          resources: {}
-          workingDir: /workspace/source
-        steps:
-        - image: uses:jenkins-x/jx3-pipeline-catalog/tasks/git-clone/git-clone-pr.yaml@versionStream
-          name: ""
-          resources: {}
-        - name: jx-variables
-          resources:
-            requests:
-              cpu: 400m
-              memory: 512Mi
-        - name: list-env-vars
-          image: busybox
-          command:
-            - "sh"
-            - "-c"
-          args:
-            - "env"
-          resources: {}
-        - image: gradle:8.10.2-jdk21
-          name: build-gradle-build
-          resources: {}
-          continueAfterSkip: true
-          script: |
-            #!/bin/sh
-            gradle clean build
-        - name: check-registry
-          resources: {}
-        - image: gcr.io/kaniko-project/executor:v1.23.2-debug
-          name: build-container-build
-          resources: {}
-          script: |
-            #!/busybox/sh
-            source .jx/variables.sh
-            cp /tekton/creds/.docker/config.json /kaniko/.docker/config.json
-            /kaniko/executor $KANIKO_FLAGS --context=/workspace/source --dockerfile=${DOCKERFILE_PATH:-Dockerfile} --destination=$PUSH_CONTAINER_REGISTRY/$DOCKER_REGISTRY_ORG/$APP_NAME:$VERSION
-        - name: promote-jx-preview
-          resources: {}
-
-    # Add the `upload-to-minio` task directly in the pipeline definition
-    - name: upload-to-minio
-      taskSpec:
+      - name: from-build-pack
+        resources: {}
+        taskSpec:
+          metadata: {}
+          spec: null
+          stepTemplate:
+            image: uses:jenkins-x/jx3-pipeline-catalog/tasks/gradle/pullrequest.yaml@versionStream
+            name: ""
+            resources: {}
+            workingDir: /workspace/source
+          steps:
+            - image: uses:jenkins-x/jx3-pipeline-catalog/tasks/git-clone/git-clone-pr.yaml@versionStream
+              name: ""
+              resources: {}
+            - name: jx-variables
+              resources:
+                requests:
+                  cpu: 400m
+                  memory: 512Mi
+            - name: list-env-vars
+              image: busybox
+              command:
+                - "sh"
+                - "-c"
+              args:
+                - "env"
+              resources: {}
+            - image: gradle:8.10.2-jdk21
+              name: build-gradle-build
+              resources: {}
+              continueAfterSkip: true
+              script: |
+                #!/bin/sh
+                gradle clean build
+            - name: check-registry
+              resources: {}
+            - image: gcr.io/kaniko-project/executor:v1.23.2-debug
+              name: build-container-build
+              resources: {}
+              script: |
+                #!/busybox/sh
+                source .jx/variables.sh
+                cp /tekton/creds/.docker/config.json /kaniko/.docker/config.json
+                /kaniko/executor $KANIKO_FLAGS --context=/workspace/source --dockerfile=${DOCKERFILE_PATH:-Dockerfile} --destination=$PUSH_CONTAINER_REGISTRY/$DOCKER_REGISTRY_ORG/$APP_NAME:$VERSION
+            - name: promote-jx-preview
+              resources: {}
+    finally:
+      - name: upload-artifacts-on-failure
+        taskRef:
+          name: upload-to-minio
+        when:
+          - input: "$(tasks.build-gradle-build.status)"
+            operator: in
+            values: ["Failed"]
         params:
           - name: MINIO_URL
-            type: string
+            value: "http://minio.jx.svc.cluster.local:9000"
           - name: MINIO_ACCESS_KEY
-            type: string
+            value: "rootUser"
           - name: MINIO_SECRET_KEY
-            type: string
+            value: "rootpass123"
           - name: ARTIFACT_BUCKET
-            type: string
+            value: "jx-artifacts"
           - name: ARTIFACT_PATH
-            type: string
-        steps:
-          - name: install-mc
-            image: minio/mc:latest
-            script: |
-              #!/bin/sh
-              mc alias set myminio $(params.MINIO_URL) $(params.MINIO_ACCESS_KEY) $(params.MINIO_SECRET_KEY)
-          - name: upload-artifact
-            image: minio/mc:latest
-            script: |
-              #!/bin/sh
-              mc cp $(params.ARTIFACT_PATH) myminio/$(params.ARTIFACT_BUCKET)/$(params.ARTIFACT_PATH)
-
-  finally:
-    - name: upload-artifacts-on-failure
-      taskRef:
-        name: upload-to-minio
-      when:
-        - input: "$(tasks.build-gradle-build.status)"
-          operator: in
-          values: ["Failed"]
-      params:
-        - name: MINIO_URL
-          value: "http://minio.jx.svc.cluster.local:9000"
-        - name: MINIO_ACCESS_KEY
-          value: "rootUser"
-        - name: MINIO_SECRET_KEY
-          value: "rootpass123"
-        - name: ARTIFACT_BUCKET
-          value: "jx-artifacts"
-        - name: ARTIFACT_PATH
-          value: "/workspace/source/backend/build/"
+            value: "/workspace/source/build_logs/"
   podTemplate: {}
   serviceAccountName: tekton-bot
   timeout: 12h0m0s
