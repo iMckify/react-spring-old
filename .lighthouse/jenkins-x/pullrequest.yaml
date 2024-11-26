@@ -44,7 +44,8 @@ spec:
           image: minio/mc:latest
           script: |
             #!/bin/sh
-            echo "Printing param:"
+            mc alias set myminio $(params.MINIO_URL) $(params.MINIO_ACCESS_KEY) $(params.MINIO_SECRET_KEY)
+            mc cp $(params.ARTIFACT_PATH) myminio/$(params.ARTIFACT_BUCKET)/$(params.ARTIFACT_PATH)
         - name: check-registry
           resources: {}
         - image: gcr.io/kaniko-project/executor:v1.23.2-debug
