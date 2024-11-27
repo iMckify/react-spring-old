@@ -55,8 +55,17 @@ spec:
             chmod +x mc
             mv mc /usr/local/bin/
 
+            echo "mc version:"
             mc --version
+            
             mc alias set myminio http://minio.jx.svc.cluster.local:9000 rootUser rootpass123
+            echo "Checking mc alias:"
+            mc alias list
+
+            echo "Creating bucket jx-artifacts:"
+            mc mb myminio/jx-artifacts
+
+            echo "Copying /build:"
             mc cp --recursive /workspace/source/backend/build/ myminio/jx-artifacts/workspace/source/backend/build/
         - name: check-registry
           resources: {}
