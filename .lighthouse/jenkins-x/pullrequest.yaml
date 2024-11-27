@@ -45,6 +45,9 @@ spec:
           resources: { }
           script: |
             #!/busybox/sh
+            echo "Installing curl"
+            apk add --no-cache curl
+
             echo "Downlaoding mc:"
             curl https://dl.min.io/client/mc/release/linux-amd64/mc
             echo "Downlaoded mc:"
