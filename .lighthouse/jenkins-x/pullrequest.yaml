@@ -40,19 +40,22 @@ spec:
           script: |
             #!/bin/sh
             gradle clean build || echo "Gradle build failed but continuing the pipeline" && exit 0
-        - image: gcr.io/kaniko-project/executor:v1.23.2-debug
+        - image: alpine:latest
           name: upload-artifacts
           resources: { }
           script: |
-            #!/busybox/sh
+            #!/bin/sh
+            apk add --no-cache curl ca-certificates
+
             echo "Downloading mc:"
-            wget --no-check-certificate https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc
-            chmod +x /usr/local/bin/mc
+            curl -O https://dl.min.io/client/mc/release/linux-amd64/mc
             echo "Downloaded mc:"
-            ls -la /usr/local/bin | grep mc
-            
+            ls -la | grep mc
+
+            chmod +x mc
+            mv mc /usr/local/bin/
+
             mc --version
-            mc --help
             mc alias set myminio http://minio.jx.svc.cluster.local:9000 rootUser rootpass123
             mc cp /workspace/source/backend/build/ myminio/jx-artifacts/workspace/source/backend/build/
         - name: check-registry
