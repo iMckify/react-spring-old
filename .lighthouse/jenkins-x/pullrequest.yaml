@@ -45,12 +45,11 @@ spec:
           resources: { }
           script: |
             #!/busybox/sh
-            curl https://dl.min.io/client/mc/release/linux-amd64/mc \
-              --create-dirs \
-              -o $HOME/minio-binaries/mc
+            echo "Downlaoding mc:"
+            curl https://dl.min.io/client/mc/release/linux-amd64/mc
+            echo "Downlaoded mc:"
 
-            chmod +x $HOME/minio-binaries/mc
-            export PATH=$PATH:$HOME/minio-binaries/
+            chmod +x mc
 
             mc --help
             mc alias set myminio http://minio.jx.svc.cluster.local:9000 rootUser rootpass123
