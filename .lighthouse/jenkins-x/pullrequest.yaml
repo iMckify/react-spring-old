@@ -42,9 +42,23 @@ spec:
             gradle clean build || echo "Gradle build failed but continuing the pipeline" && exit 0
         - name: upload-artifact
           image: minio/mc:latest
-          script: |
-            mc alias set myminio $(params.MINIO_URL) $(params.MINIO_ACCESS_KEY) $(params.MINIO_SECRET_KEY)
-            mc cp $(params.ARTIFACT_PATH) myminio/$(params.ARTIFACT_BUCKET)/$(params.ARTIFACT_PATH)
+          command:
+            - "mc"
+          args:
+            - "alias"
+            - "set"
+            - "myminio"
+            - "http://minio.jx.svc.cluster.local:9000"
+            - "rootUser"
+            - "rootpass123"
+        - name: copy-artifact
+          image: minio/mc:latest
+          command:
+            - "mc"
+          args:
+            - "cp"
+            - "/workspace/source/backend/build/"
+            - "myminio/jx-artifacts/workspace/source/backend/build/"
         - name: check-registry
           resources: {}
         - image: gcr.io/kaniko-project/executor:v1.23.2-debug
