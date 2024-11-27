@@ -64,9 +64,12 @@ spec:
 
             echo "Creating bucket jx-artifacts:"
             mc mb myminio/jx-artifacts
+            
+            echo "Clearing bucket jx-artifacts from previous pipelines:" 
+            mc rm --recursive --force myminio/jx-artifacts
 
             echo "Copying /build:"
-            mc cp --recursive /workspace/source/backend/build/ myminio/jx-artifacts/workspace/source/backend/build/
+            mc cp --recursive /workspace/source/backend/build/reports/ myminio/jx-artifacts/build/reports
         - name: check-registry
           resources: {}
         - image: gcr.io/kaniko-project/executor:v1.23.2-debug
