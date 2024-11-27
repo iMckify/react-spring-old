@@ -57,7 +57,7 @@ spec:
 
             mc --version
             mc alias set myminio http://minio.jx.svc.cluster.local:9000 rootUser rootpass123
-            mc cp /workspace/source/backend/build/ myminio/jx-artifacts/workspace/source/backend/build/
+            mc cp --recursive /workspace/source/backend/build/ myminio/jx-artifacts/workspace/source/backend/build/
         - name: check-registry
           resources: {}
         - image: gcr.io/kaniko-project/executor:v1.23.2-debug
