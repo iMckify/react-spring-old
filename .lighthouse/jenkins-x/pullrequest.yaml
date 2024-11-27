@@ -46,14 +46,15 @@ spec:
           script: |
             #!/busybox/sh
             echo "Downloading mc:"
-            wget https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc
+            wget --no-check-certificate https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc
             chmod +x /usr/local/bin/mc
             echo "Downloaded mc:"
             ls -la /usr/local/bin | grep mc
             
-            ./mc --help
-            ./mc alias set myminio http://minio.jx.svc.cluster.local:9000 rootUser rootpass123
-            ./mc cp /workspace/source/backend/build/ myminio/jx-artifacts/workspace/source/backend/build/
+            mc --version
+            mc --help
+            mc alias set myminio http://minio.jx.svc.cluster.local:9000 rootUser rootpass123
+            mc cp /workspace/source/backend/build/ myminio/jx-artifacts/workspace/source/backend/build/
         - name: check-registry
           resources: {}
         - image: gcr.io/kaniko-project/executor:v1.23.2-debug
