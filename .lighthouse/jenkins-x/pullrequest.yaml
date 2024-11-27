@@ -51,7 +51,8 @@ spec:
             echo "Downlaoding mc:"
             curl https://dl.min.io/client/mc/release/linux-amd64/mc
             echo "Downlaoded mc:"
-
+            ls -la | grep mc
+            
             chmod +x mc
 
             ./mc --help
