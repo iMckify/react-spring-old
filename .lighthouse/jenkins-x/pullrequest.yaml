@@ -48,7 +48,7 @@ spec:
             - "alias"
             - "set"
             - "myminio"
-            - "http://minio.jx.svc.cluster.local:9000"
+            - "http://minio.jx.svc.cluster.local"
             - "rootUser"
             - "rootpass123"
         - name: copy-artifact
