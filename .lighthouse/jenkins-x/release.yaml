@@ -45,23 +45,8 @@ spec:
             /kaniko/executor $KANIKO_FLAGS --context=/workspace/source --dockerfile=${DOCKERFILE_PATH:-Dockerfile} --destination=$PUSH_CONTAINER_REGISTRY/$DOCKER_REGISTRY_ORG/$APP_NAME:$VERSION
         - name: promote-changelog
           resources: {}
-        - image: ghcr.io/jenkins-x/jx-boot:3.11.3
-          name: promote-helm-release
+        - name: promote-helm-release
           resources: {}
-          script: |
-            #!/usr/bin/env sh
-            source .jx/variables.sh
-            
-            OCI_REGISTRY=docker-registry-jx.$DOMAIN
-            echo "Logging into OCI registry with insecure TLS skip..."
-            echo admin | helm registry login $OCI_REGISTRY --username admin --password-stdin --insecure
-            
-            echo "Packaging Helm chart..."
-            CHART_DIR=./charts/$APP_NAME
-            helm package $CHART_DIR --version $VERSION
-
-            echo "Pushing Helm chart to OCI registry over HTTP..."
-            helm push ./$APP_NAME-$VERSION.tgz oci://$OCI_REGISTRY/charts --insecure-skip-tls-verify --debug
         - name: promote-jx-promote
           resources: {}
   podTemplate: {}
