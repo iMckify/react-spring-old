@@ -45,8 +45,13 @@ spec:
             /kaniko/executor $KANIKO_FLAGS --context=/workspace/source --dockerfile=${DOCKERFILE_PATH:-Dockerfile} --destination=$PUSH_CONTAINER_REGISTRY/$DOCKER_REGISTRY_ORG/$APP_NAME:$VERSION
         - name: promote-changelog
           resources: {}
-        - name: promote-helm-release
+        - image: ghcr.io/jenkins-x/jx-boot:3.11.3
+          name: promote-helm-release
           resources: {}
+          script: |
+            #!/usr/bin/env sh
+            source .jx/variables.sh
+            jx gitops helm release --oci --no-oci-login --repo-url $JX_CHART_REPOSITORY/charts --version $VERSION
         - name: promote-jx-promote
           resources: {}
   podTemplate: {}
