@@ -52,7 +52,7 @@ spec:
             #!/usr/bin/env sh
             source .jx/variables.sh
             
-            OCI_REGISTRY=docker-registry-$DOMAIN
+            OCI_REGISTRY=docker-registry-jx.$DOMAIN
             echo "Logging into OCI registry with insecure TLS skip..."
             echo admin | helm registry login $OCI_REGISTRY --username admin --password-stdin --insecure
             
@@ -61,7 +61,7 @@ spec:
             helm package $CHART_DIR --version $VERSION
 
             echo "Pushing Helm chart to OCI registry over HTTP..."
-            helm push ./$APP_NAME-$VERSION.tgz oci://$OCI_REGISTRY --insecure-skip-tls-verify --debug
+            helm push ./$APP_NAME-$VERSION.tgz oci://$OCI_REGISTRY/charts --insecure-skip-tls-verify --debug
         - name: promote-jx-promote
           resources: {}
   podTemplate: {}
