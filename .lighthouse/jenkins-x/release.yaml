@@ -51,7 +51,9 @@ spec:
           script: |
             #!/usr/bin/env sh
             source .jx/variables.sh
-            echo "custom imckify release"
+            echo "Logging into OCI registry with insecure TLS skip..."
+            helm registry login docker-registry-jx.192.168.49.2.nip.io --username admin --password admin --insecure
+            echo "Releasing Helm chart..."
             jx gitops helm release --oci --no-oci-login --repo-url docker-registry-jx.192.168.49.2.nip.io --version $VERSION --charts-dir ./charts
         - name: promote-jx-promote
           resources: {}
