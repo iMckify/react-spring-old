@@ -7,7 +7,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Hello Rokas! try cluster level oci
+          Hello Rokas! helm push manual
         </p>
         <a
           className="App-link"
