@@ -52,10 +52,10 @@ spec:
             #!/usr/bin/env sh
             source .jx/variables.sh
             echo "Logging into OCI registry with insecure TLS skip..."
-            echo admin | helm registry login $DOCKER_REGISTRY --username admin --password-stdin --insecure
+            echo admin | helm registry login $DOCKER_REGISTRY:80 --username admin --password-stdin --insecure
             echo "Releasing Helm chart..."
             export HELM_OPTS="--insecure-skip-tls-verify"
-            jx gitops helm release --oci --no-oci-login --repo-url $DOCKER_REGISTRY --version $VERSION --charts-dir ./charts
+            jx gitops helm release --oci --no-oci-login --repo-url $DOCKER_REGISTRY:80 --version $VERSION --charts-dir ./charts
         - name: promote-jx-promote
           resources: {}
   podTemplate: {}
