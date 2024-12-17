@@ -7,7 +7,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Hello Rokas! redeploy
+          Hello Rokas! push chart to docker-registry
         </p>
         <a
           className="App-link"
