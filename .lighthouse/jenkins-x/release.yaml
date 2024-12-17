@@ -52,7 +52,7 @@ spec:
             #!/usr/bin/env sh
             source .jx/variables.sh
             echo "custom imckify release"
-            jx gitops helm release --oci --no-oci-login --repo-url oci://docker-registry-jx.192.168.49.2.nip.io --version $VERSION --charts-dir ./charts
+            jx gitops helm release --oci --no-oci-login --repo-url docker-registry-jx.192.168.49.2.nip.io --version $VERSION --charts-dir ./charts
         - name: promote-jx-promote
           resources: {}
   podTemplate: {}
