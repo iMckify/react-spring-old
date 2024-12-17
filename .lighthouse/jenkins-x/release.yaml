@@ -52,8 +52,9 @@ spec:
             #!/usr/bin/env sh
             source .jx/variables.sh
             echo "Logging into OCI registry with insecure TLS skip..."
-            helm registry login docker-registry-jx.192.168.49.2.nip.io --username admin --password admin --insecure
+            echo admin | helm registry login docker-registry-jx.192.168.49.2.nip.io --username admin --password-stdin --insecure
             echo "Releasing Helm chart..."
+            export HELM_OPTS="--insecure-skip-tls-verify"
             jx gitops helm release --oci --no-oci-login --repo-url docker-registry-jx.192.168.49.2.nip.io --version $VERSION --charts-dir ./charts
         - name: promote-jx-promote
           resources: {}
