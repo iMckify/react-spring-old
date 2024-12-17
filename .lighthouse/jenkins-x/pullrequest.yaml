@@ -65,6 +65,9 @@ spec:
             echo "Creating bucket jx-artifacts:"
             mc mb myminio/jx-artifacts
             
+            echo "Making bucket jx-artifacts public in order to enable rendering:"
+            mc anonymous set public myminio/jx-artifacts
+            
             echo "Clearing bucket jx-artifacts from previous pipelines:" 
             mc rm --recursive --force myminio/jx-artifacts
 
