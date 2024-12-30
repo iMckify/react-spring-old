@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.4'
     id 'io.spring.dependency-management' version '1.1.6'
+    id 'maven-publish'
 }
 
 group = 'com.imckify'
@@ -38,3 +39,44 @@ tasks.register('addFrontendToBackend', Copy) {
 
 processResources.dependsOn addFrontendToBackend
 
+
+ext {
+    username = System.getenv("GITHUB_ACTOR") ?: githubUser ?: project.findProperty("githubUser")
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId rootProject.name
+            from components.java
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = 'GitHubPackages'
+            url = uri("https://maven.pkg.github.com/imckify/${rootProject.name}")
+            credentials {
+                String passwordPlaceholder = 'ghp_PERSONAL_ACCESS_TOKEN_CLASSIC'
+
+                String username = System.getenv("GITHUB_ACTOR") ?: githubUser ?: project.findProperty("githubUser")
+                String password = System.getenv("GITHUB_TOKEN") ?: githubKey ?: project.findProperty("githubKey")
+
+                if (!username || !password || password == passwordPlaceholder) {
+                    throw new InvalidUserDataException('Invalid GitHub Packages credentials.\n' +
+                        'Set them in gradle.properties or run tasks with arguments like:\n' +
+                        "./gradlew build -PgithubKey=$passwordPlaceholder")
+                }
+
+                it.username = username
+                it.password = password
+            }
+        }
+    }
+}
+
+tasks.withType(GenerateModuleMetadata).configureEach {
+    suppressedValidationErrors.add('dependencies-without-versions')
+}
