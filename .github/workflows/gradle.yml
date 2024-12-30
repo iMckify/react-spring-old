@@ -49,12 +49,6 @@ jobs:
     # - name: Build with Gradle 8.9
     #   run: gradle build
 
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: Package
-        path: backend/build/libs
-
   dependency-submission:
 
     runs-on: ubuntu-latest
