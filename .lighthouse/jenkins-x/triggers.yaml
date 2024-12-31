@@ -7,7 +7,8 @@ spec:
     always_run: true
     optional: false
     source: "pullrequest.yaml"
-    trigger: "/custom-webhook-event/"
+    trigger: "/test custom-webhook-event/"
+    rerun_command: "/test custom-webhook-event"
   postsubmits:
   - name: release
     context: "release"
