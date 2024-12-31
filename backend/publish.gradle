@@ -1,7 +1,10 @@
 apply plugin: 'maven-publish'
 
 ext {
-    username = System.getenv("GITHUB_ACTOR") ?: githubUser ?: project.findProperty("githubUser")
+    mavenRepoName = 'GitHubPackages'
+    mavenRepoUsername = System.getenv("GITHUB_ACTOR") ?: project.findProperty("githubUser")
+    mavenRepoPassword = System.getenv("GITHUB_TOKEN") ?: project.findProperty("githubKey")
+    mavenRepoPasswordPlaceholder = 'ghp_PERSONAL_ACCESS_TOKEN_CLASSIC'
 }
 
 publishing {
@@ -16,23 +19,23 @@ publishing {
 publishing {
     repositories {
         maven {
-            name = 'GitHubPackages'
+            name = mavenRepoName
             url = uri("https://maven.pkg.github.com/imckify/${rootProject.name}")
             credentials {
-                String passwordPlaceholder = 'ghp_PERSONAL_ACCESS_TOKEN_CLASSIC'
-
-                String username = System.getenv("GITHUB_ACTOR") ?: githubUser ?: project.findProperty("githubUser")
-                String password = System.getenv("GITHUB_TOKEN") ?: githubKey ?: project.findProperty("githubKey")
-
-                if (!username || !password || password == passwordPlaceholder) {
-                    throw new InvalidUserDataException('Invalid GitHub Packages credentials.\n' +
-                            'Set them in gradle.properties or run tasks with arguments like:\n' +
-                            "./gradlew build -PgithubKey=$passwordPlaceholder")
-                }
-
-                it.username = username
-                it.password = password
+                username = mavenRepoUsername
+                password = mavenRepoPassword
             }
+        }
+    }
+}
+
+tasks.withType(PublishToMavenRepository).configureEach {
+    doFirst {
+        if (!mavenRepoUsername || !mavenRepoPassword) {
+            throw new GradleException("Publishing failed: missing credentials for maven repository $mavenRepoName")
+        } else if (mavenRepoPassword == mavenRepoPasswordPlaceholder) {
+            throw new GradleException("Publishing failed: detected placeholder value for maven repository password. " +
+                "Please provide a valid GitHub Personal Access Token (Classic).")
         }
     }
 }
