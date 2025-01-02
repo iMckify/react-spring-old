@@ -60,7 +60,7 @@ jobs:
         curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
         -H "Accept: application/vnd.github+json" \
         -d '{"body":"/test custom-webhook-event"}' \
-        "https://api.github.com/repos/iMckify/react-spring/issues/${{ env.PR_NUMBER }}/comments"
+        "https://api.github.com/repos/iMckify/react-spring/issues/11/comments"
         
   
   
