@@ -7,7 +7,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Hello Rokas! trigger only after comment with new github setting
+          Hello Rokas! `/test pr` triggered only on demand by github action
         </p>
         <a
           className="App-link"
