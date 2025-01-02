@@ -7,7 +7,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Hello Rokas! redeploy
+          Hello Rokas! publish.yml
         </p>
         <a
           className="App-link"
