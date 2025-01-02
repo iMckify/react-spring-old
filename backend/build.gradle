@@ -7,6 +7,8 @@ plugins {
 group = 'com.imckify'
 version = '0.0.1-SNAPSHOT'
 
+apply from: 'publish.gradle'
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
@@ -37,4 +39,3 @@ tasks.register('addFrontendToBackend', Copy) {
 }
 
 processResources.dependsOn addFrontendToBackend
-

@@ -1,0 +1,45 @@
+apply plugin: 'maven-publish'
+
+ext {
+    mavenRepoName = 'GitHubPackages'
+    mavenRepoUsername = System.getenv("GITHUB_ACTOR") ?: project.findProperty("githubUser")
+    mavenRepoPassword = System.getenv("GITHUB_TOKEN") ?: project.findProperty("githubKey")
+    mavenRepoPasswordPlaceholder = 'ghp_PERSONAL_ACCESS_TOKEN_CLASSIC'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId rootProject.name
+            from components.java
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = mavenRepoName
+            url = uri("https://maven.pkg.github.com/$mavenRepoUsername/${rootProject.name}")
+            credentials {
+                username = mavenRepoUsername
+                password = mavenRepoPassword
+            }
+        }
+    }
+}
+
+tasks.withType(PublishToMavenRepository).configureEach {
+    doFirst {
+        if (!mavenRepoUsername || !mavenRepoPassword) {
+            throw new GradleException("Publishing failed: missing credentials for maven repository $mavenRepoName")
+        } else if (mavenRepoPassword == mavenRepoPasswordPlaceholder) {
+            throw new GradleException("Publishing failed: detected placeholder value for maven repository password. " +
+                "Please provide a valid GitHub Personal Access Token (Classic).")
+        }
+    }
+}
+
+tasks.withType(GenerateModuleMetadata).configureEach {
+    suppressedValidationErrors.add('dependencies-without-versions')
+}
