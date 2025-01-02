@@ -30,59 +30,24 @@ jobs:
       with:
         java-version: '21'
         distribution: 'corretto'
-        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+        server-id: github
         settings-path: ${{ github.workspace }} # location for the settings.xml file
-
-    # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
-    # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
     - name: Setup Gradle
       #uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
       uses: gradle/actions/setup-gradle@v4
-
     - name: Build with Gradle Wrapper
       run: ./gradlew build
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
-      # the publishing section of your build.gradle
-    - name: Publish to GitHub Packages
-      run: ./gradlew publish
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Get PR number from GITHUB_REF
-      id: extract_pr_number
-      run: |
-        PR_NUMBER=$(echo $GITHUB_REF | sed 's/refs\/pull\/\([0-9]\+\)\/merge/\1/')
-        echo "PR_NUMBER=${PR_NUMBER}" >> $GITHUB_ENV
-
+#    - name: Publish to GitHub Packages
+#      run: ./gradlew publish
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Trigger Jenkins X with Comment
       uses: thollander/actions-comment-pull-request@v1
       with:
         message: '/test custom-webhook-event'
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Trigger imckify webhook event
-      run: |
-        curl -X POST \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer $GITHUB_TOKEN" \
-          https://api.github.com/repos/${{ github.repository }}/dispatches \
-          -d '{"event_type":"imckify-webhook-event","client_payload":{"message":"This is a custom event"}}'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
-    # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
-    #
-    # - name: Setup Gradle
-    #   uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
-    #   with:
-    #     gradle-version: '8.9'
-    #
-    # - name: Build with Gradle 8.9
-    #   run: gradle build
 
   dependency-submission:
 
@@ -97,8 +62,6 @@ jobs:
       with:
         java-version: '21'
         distribution: 'corretto'
-
-    # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
     # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
     - name: Generate and submit dependency graph
       uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
