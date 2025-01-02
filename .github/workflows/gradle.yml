@@ -66,9 +66,10 @@ jobs:
     - name: Trigger imckify webhook event
       run: |
         curl -X POST \
-          -H "Content-Type: application/json" \
-          -d '{"event_type":"imckify-webhook-event","client_payload":{"message":"This is a custom event"}}' \
-          https://sharp-sunny-elephant.ngrok-free.app/hook
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer $GITHUB_TOKEN" \
+          https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -d '{"event_type":"imckify-webhook-event","client_payload":{"message":"This is a custom event"}}'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
