@@ -20,6 +20,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      issues: write
 
     steps:
     - uses: actions/checkout@v4
