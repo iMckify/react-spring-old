@@ -14,18 +14,17 @@ apply plugin: 'checkstyle'
 checkstyleMain.exclude '**/generated-sources/**'
 
 checkstyleMain {
-    configFile = rootProject.file('config/checkstyle_rules.xml')
     source = file('src/main/java')
-    ignoreFailures = true
 }
 
 checkstyleTest {
-    configFile = rootProject.file('config/checkstyle_rules.xml')
-    source = file('src/main/java')
-    ignoreFailures = true
+    source = file('src/test/java')
 }
 
 tasks.withType(Checkstyle) {
+    configFile = rootProject.file('config/checkstyle_rules.xml')
+    ignoreFailures = true
+
     classpath = files()
 
     reports {
