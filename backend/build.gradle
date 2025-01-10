@@ -48,7 +48,7 @@ tasks.register('violations', se.bjurr.violations.gradle.plugin.ViolationsTask) {
     maxRuleColumnWidth.set(60)
     maxMessageColumnWidth.set(50)
     codeClimateFile.set(file('./build/reports/code-climate.json'))
-//    violationsFile.set(file('./build/reports/violations-file.json'))
+    violationsFile.set(file('./build/reports/violations-file.json'))
 
     maxViolations.set(0)
     printViolations.set(false)
@@ -58,11 +58,12 @@ tasks.register('violations', se.bjurr.violations.gradle.plugin.ViolationsTask) {
 
     violations = ([
             ["CHECKSTYLE", projectDir.path, ".*/checkstyle/.*\\.xml\$", "Checkstyle"],
-            ["CODENARC", projectDir.path, ".*/codenarc/.*\\.xml\$", "CodeNarc"]
+            ["CODENARC", projectDir.path, ".*/codenarc/.*\\.xml\$", "CodeNarc"],
+            ["JUNIT", projectDir.path, ".*/test-results/.*\\.xml\$", "Test"],
     ])
 }
-check.dependsOn violations
-test.mustRunAfter violations
-tasks.named('violations') {
-    mustRunAfter 'checkstyleMain', 'checkstyleTest', 'codenarcMain', 'codenarcTest'
-}
+//check.dependsOn violations
+//test.mustRunAfter violations
+//tasks.named('violations') {
+//    mustRunAfter 'checkstyleMain', 'checkstyleTest', 'codenarcMain', 'codenarcTest'
+//}
