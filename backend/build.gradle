@@ -1,7 +1,9 @@
 plugins {
     id 'java'
+    id 'groovy'
     id 'org.springframework.boot' version '3.3.4'
     id 'io.spring.dependency-management' version '1.1.6'
+    id 'se.bjurr.violations.violations-gradle-plugin' version '3.0.2'
 }
 
 group = 'com.imckify'
@@ -22,13 +24,13 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.jar.enabled = false
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
 }
 
@@ -39,3 +41,24 @@ tasks.register('addFrontendToBackend', Copy) {
 }
 
 processResources.dependsOn addFrontendToBackend
+
+apply from: 'code-quality.gradle'
+
+tasks.register('violations', se.bjurr.violations.gradle.plugin.ViolationsTask) {
+    maxRuleColumnWidth.set(60)
+    maxMessageColumnWidth.set(50)
+    codeClimateFile.set(file('./build/reports/code-climate.json'))
+    violationsFile.set(file('./build/reports/violations-file.json'))
+
+    maxViolations.set(0)
+    printViolations.set(false)
+
+    diffMaxViolations.set(0)
+    diffPrintViolations.set(false)
+
+    violations = ([
+            ["CHECKSTYLE", projectDir.path, ".*/checkstyle/.*\\.xml\$", "Checkstyle"],
+            ["CODENARC", projectDir.path, ".*/codenarc/.*\\.xml\$", "CodeNarc"],
+            ["JUNIT", projectDir.path, ".*/test-results/.*\\.xml\$", "Test"],
+    ])
+}

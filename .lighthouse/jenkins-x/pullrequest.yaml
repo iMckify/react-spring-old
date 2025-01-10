@@ -34,6 +34,12 @@ spec:
             - "env"
           resources: {}
         - image: gradle:8.10.2-jdk21
+          name: build-gradle-check
+          resources: { }
+          script: |
+            #!/bin/sh
+            clean check violations --continue
+        - image: gradle:8.10.2-jdk21
           name: build-gradle-build
           resources: {}
           script: |

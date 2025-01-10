@@ -1,0 +1,54 @@
+ext {
+    spockVersion = '2.4-M1-groovy-4.0'
+}
+
+dependencies {
+    testImplementation(
+        "org.spockframework:spock-core:${spockVersion}",
+        "org.spockframework:spock-spring:${spockVersion}",
+    )
+}
+
+apply plugin: 'checkstyle'
+
+checkstyleMain.exclude '**/generated-sources/**'
+
+checkstyleMain {
+    source = file('src/main/java')
+}
+
+checkstyleTest {
+    source = file('src/test/java')
+}
+
+tasks.withType(Checkstyle) {
+    configFile = rootProject.file('config/checkstyle_rules.xml')
+    ignoreFailures = true
+
+    classpath = files()
+
+    reports {
+        html.required = false
+        xml.required = true
+    }
+}
+
+apply plugin: 'codenarc'
+
+codenarcMain {
+    source = 'src/main/groovy'
+    ignoreFailures = true
+}
+
+codenarcTest {
+    source = 'src/test/groovy'
+    ignoreFailures = true
+}
+
+tasks.withType(CodeNarc) {
+    configFile = rootProject.file('config/codenarc_rules.xml')
+    reports {
+        html.required = false
+        xml.required = true
+    }
+}
