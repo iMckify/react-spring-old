@@ -62,4 +62,3 @@ tasks.register('violations', se.bjurr.violations.gradle.plugin.ViolationsTask) {
             ["JUNIT", projectDir.path, ".*/test-results/.*\\.xml\$", "Test"],
     ])
 }
-test.finalizedBy violations

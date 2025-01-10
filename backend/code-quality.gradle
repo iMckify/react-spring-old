@@ -52,3 +52,17 @@ tasks.withType(CodeNarc) {
         xml.required = true
     }
 }
+
+tasks.register('lastOne') {
+    doLast {
+        println 'This is the last task running after all checks!'
+    }
+}
+
+tasks.register('checks') {
+    group = 'verification'
+    description = 'Runs Checkstyle, CodeNarc, and tests.'
+
+    dependsOn checkstyleMain, checkstyleTest, codenarcMain, codenarcTest, test
+    finalizedBy lastOne
+}
