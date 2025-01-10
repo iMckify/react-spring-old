@@ -47,5 +47,5 @@ checkstyleMain.exclude '**/generated-sources/**'
 checkstyleMain {
     configFile = rootProject.file('config/checkstyle_rules.xml')
     source = file('src/main/java')
-    ignoreFailures = true
+    ignoreFailures = false
 }
