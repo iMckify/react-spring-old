@@ -1,7 +1,12 @@
+//import se.bjurr.violations.gradle.plugin.ViolationsTask
+
 plugins {
     id 'java'
+    id 'groovy'
+    id 'idea'
     id 'org.springframework.boot' version '3.3.4'
     id 'io.spring.dependency-management' version '1.1.6'
+//    id 'se.bjurr.violations.violations-gradle-plugin' version '1.52.7'
 }
 
 group = 'com.imckify'
@@ -28,7 +33,7 @@ dependencies {
 
 tasks.jar.enabled = false
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
 }
 
@@ -39,3 +44,70 @@ tasks.register('addFrontendToBackend', Copy) {
 }
 
 processResources.dependsOn addFrontendToBackend
+
+//idea {
+//    module {
+//        testSourceDirs += file('src/test/groovy')
+//    }
+//}
+
+apply plugin: 'checkstyle'
+
+checkstyleMain.exclude '**/generated-sources/**'
+
+checkstyleMain {
+    configFile = rootProject.file('config/checkstyle_rules.xml')
+    source = file('backend/src/main/java')
+    ignoreFailures = true
+}
+//
+//checkstyleTest {
+//    configFile = rootProject.file('config/checkstyle_rules.xml')
+//    source ='backend/src/test/java'
+//}
+//
+//tasks.withType(Checkstyle) {
+//    classpath = files()     //improve Checkstyle task caching - don't re-execute if 'domain' is changed
+//
+//    reports {
+//        html.required = false
+//        xml.required = true
+//    }
+//}
+//
+//apply plugin: 'codenarc'
+//
+//codenarcMain {
+//    source = 'backend/src/main/groovy'
+//    ignoreFailures = true
+//}
+//
+//codenarcTest {
+//    source = 'backend/src/test/groovy'
+//}
+//
+//tasks.withType(CodeNarc) {
+//    configFile = rootProject.file('config/codenarc_rules.xml')
+//    reports {
+//        html.required = false
+//        xml.required = true
+//    }
+//
+//}
+//
+//task violations(type: ViolationsTask) {
+//    maxRuleColumnWidth = 60
+//    maxMessageColumnWidth = 50
+//    codeClimateFile = file('./backend/build/reports/code-climate.json')
+//
+//    maxViolations = 0
+//    printViolations = false
+//
+//    diffMaxViolations = 0
+//    diffPrintViolations = false
+//
+//    violations = [
+//            ["CHECKSTYLE", projectDir.path, ".*/checkstyle/.*\\.xml\$", "Checkstyle"],
+//            ["CODENARC", projectDir.path, ".*/codenarc/.*\\.xml\$", "CodeNarc"]
+//    ] as List<List<String>>
+//}
