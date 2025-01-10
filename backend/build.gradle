@@ -62,8 +62,4 @@ tasks.register('violations', se.bjurr.violations.gradle.plugin.ViolationsTask) {
             ["JUNIT", projectDir.path, ".*/test-results/.*\\.xml\$", "Test"],
     ])
 }
-//check.dependsOn violations
-//test.mustRunAfter violations
-//tasks.named('violations') {
-//    mustRunAfter 'checkstyleMain', 'checkstyleTest', 'codenarcMain', 'codenarcTest'
-//}
+test.finalizedBy violations
