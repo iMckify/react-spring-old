@@ -1,7 +1,11 @@
+import se.bjurr.violations.gradle.plugin.ViolationsTask
+
 plugins {
     id 'java'
+    id 'groovy'
     id 'org.springframework.boot' version '3.3.4'
     id 'io.spring.dependency-management' version '1.1.6'
+    id 'se.bjurr.violations.violations-gradle-plugin' version '1.52.7'
 }
 
 group = 'com.imckify'
@@ -15,6 +19,10 @@ java {
     }
 }
 
+ext {
+    spockVersion = '2.4-M1-groovy-4.0'
+}
+
 repositories {
     mavenCentral()
 }
@@ -22,8 +30,12 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation(
+            'org.springframework.boot:spring-boot-starter-test',
+            "org.spockframework:spock-core:${spockVersion}",
+            "org.spockframework:spock-spring:${spockVersion}",
+    )
 }
 
 tasks.jar.enabled = false
@@ -47,5 +59,57 @@ checkstyleMain.exclude '**/generated-sources/**'
 checkstyleMain {
     configFile = rootProject.file('config/checkstyle_rules.xml')
     source = file('src/main/java')
-    ignoreFailures = false
+    ignoreFailures = true
+}
+
+checkstyleTest {
+    configFile = rootProject.file('config/checkstyle_rules.xml')
+    source = file('src/main/java')
+    ignoreFailures = true
+}
+
+tasks.withType(Checkstyle) {
+    classpath = files()
+
+    reports {
+        html.required = false
+        xml.required = true
+    }
+}
+
+apply plugin: 'codenarc'
+
+codenarcMain {
+    source = 'src/main/groovy'
+    ignoreFailures = true
+}
+
+codenarcTest {
+    source = 'src/test/groovy'
+    ignoreFailures = true
+}
+
+tasks.withType(CodeNarc) {
+    configFile = rootProject.file('config/codenarc_rules.xml')
+    reports {
+        html.required = false
+        xml.required = true
+    }
+}
+
+task violations(type: ViolationsTask) {
+    maxRuleColumnWidth = 60
+    maxMessageColumnWidth = 50
+    codeClimateFile = file('./build/reports/code-climate.json')
+
+    maxViolations = 0
+    printViolations = false
+
+    diffMaxViolations = 0
+    diffPrintViolations = false
+
+    violations = [
+            ["CHECKSTYLE", projectDir.path, ".*/checkstyle/.*\\.xml\$", "Checkstyle"],
+            ["CODENARC", projectDir.path, ".*/codenarc/.*\\.xml\$", "CodeNarc"]
+    ] as List<List<String>>
 }
